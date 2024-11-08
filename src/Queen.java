@@ -17,8 +17,8 @@ public class Queen extends ChessPiece {
 
         // Ферзь ходит по диагонали, вертикали или горизонтали
         if (deltaX == deltaY || line == toLine || column == toColumn) {
-            int stepX = (toLine - line) == 0 ? 0 : (toLine - line) > 0 ? 1 : -1;
-            int stepY = (toColumn - column) == 0 ? 0 : (toColumn - column) > 0 ? 1 : -1;
+            int stepX = Integer.compare(toLine - line, 0);
+            int stepY = Integer.compare(toColumn - column, 0);
             int currentLine = line + stepX;
             int currentColumn = column + stepY;
 
@@ -32,7 +32,9 @@ public class Queen extends ChessPiece {
             }
 
             // Проверка, есть ли на целевой позиции фигура противника
-            return chessBoard.board[toLine][toColumn] == null || !chessBoard.board[toLine][toColumn].getColor().equals(this.getColor());
+            return chessBoard.board[toLine][toColumn] == null || !chessBoard.board[toLine][toColumn].getColor().equals(
+                    this.getColor()
+            );
         }
         return false;
     }

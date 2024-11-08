@@ -20,14 +20,21 @@ public class Pawn extends ChessPiece {
             if (toLine - line == direction && chessBoard.board[toLine][toColumn] == null) {
                 return true; // Проверяем, что целевая позиция пуста
             }
-            if (line == startLine && toLine - line == 2 * direction && chessBoard.board[toLine][toColumn] == null && chessBoard.board[line + direction][column] == null) {
+            boolean isInitialLine = line == startLine;
+            boolean isTwoStepMove = toLine - line == 2 * direction;
+            boolean isDestinationEmpty = chessBoard.board[toLine][toColumn] == null;
+            boolean isIntermediateEmpty = chessBoard.board[line + direction][column] == null;
+
+            if (isInitialLine && isTwoStepMove && isDestinationEmpty && isIntermediateEmpty) {
                 return true; // Первый ход на два поля вперед
             }
         }
 
         // Проверка взятия фигуры
         if (Math.abs(toColumn - column) == 1 && toLine - line == direction) {
-            return chessBoard.board[toLine][toColumn] != null && !chessBoard.board[toLine][toColumn].getColor().equals(this.getColor());
+            return chessBoard.board[toLine][toColumn] != null && !chessBoard.board[toLine][toColumn].getColor().equals(
+                    this.getColor()
+            );
         }
 
         return false;

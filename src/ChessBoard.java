@@ -54,99 +54,57 @@ public class ChessBoard {
             System.out.println();
         }
         System.out.println("Player 1(White)");
-//        System.out.println();
-        System.out.println("Turn " + nowPlayer +"! (Enter command:)");
+        System.out.println("Turn " + nowPlayer + "! (Enter command:)");
     }
 
     public boolean checkPos(int pos) {
         return pos >= 0 && pos <= 7;
     }
 
-    public boolean castling0() {
-        // Проверка условий для рокировки по 0 столбцу
-        if (nowPlayer.equals("White")) {
-            if (board[0][4] instanceof King && board[0][0] instanceof Rook) {
-                King king = (King) board[0][4];
-                Rook rook = (Rook) board[0][0];
-                if (king.check && rook.check && board[0][1] == null && board[0][2] == null && board[0][3] == null) {
-                    if (!king.isUnderAttack(this, 0, 4) && !king.isUnderAttack(this, 0, 3) && !king.isUnderAttack(this, 0, 2)) {
-                        // Выполняем рокировку
-                        board[0][2] = king;
-                        board[0][4] = null;
-                        board[0][3] = rook;
-                        board[0][0] = null;
-                        king.check = false;
-                        rook.check = false;
-                        nowPlayer = "Black";
-                        return true;
+
+    public boolean castling(int row, int kingCol, int rookCol, int[] emptyCols, int[] checkCols) {
+        if (nowPlayer.equals(board[row][kingCol].getColor()) &&
+                board[row][kingCol] instanceof King king &&
+                board[row][rookCol] instanceof Rook rook
+        ) {
+            if (king.check && rook.check) {
+                for (int col : emptyCols) { // Проверяем, что все промежуточные клетки пусты
+                    if (board[row][col] != null) {
+                        return false;
                     }
                 }
-            }
-        } else {
-            // Проверка условий для черных фигур
-            if (board[7][4] instanceof King && board[7][0] instanceof Rook) {
-                King king = (King) board[7][4];
-                Rook rook = (Rook) board[7][0];
-                if (king.check && rook.check && board[7][1] == null && board[7][2] == null && board[7][3] == null) {
-                    if (!king.isUnderAttack(this, 7, 4) && !king.isUnderAttack(this, 7, 3) && !king.isUnderAttack(this, 7, 2)) {
-                        // Выполняем рокировку
-                        board[7][2] = king;
-                        board[7][4] = null;
-                        board[7][3] = rook;
-                        board[7][0] = null;
-                        king.check = false;
-                        rook.check = false;
-                        nowPlayer = "White";
-                        return true;
+                for (int col : checkCols) { // Проверяем, что клетки не находятся под атакой
+                    if (king.isUnderAttack(this, row, col)) {
+                        return false;
                     }
                 }
+                // Выполняем рокировку
+                board[row][rookCol < kingCol ? kingCol - 2 : kingCol + 2] = king;
+                board[row][kingCol] = null;
+                board[row][rookCol < kingCol ? kingCol - 1 : kingCol + 1] = rook;
+                board[row][rookCol] = null;
+                king.check = false;
+                rook.check = false;
+                nowPlayer = nowPlayer.equals("White") ? "Black" : "White";
+                return true;
             }
         }
         return false;
+    }
+
+    public boolean castling0() {
+        return castling(
+                nowPlayer.equals("White") ? 0 : 7, 4, 0,
+                new int[]{1, 2, 3},
+                new int[]{4, 3, 2}
+        );
     }
 
     public boolean castling7() {
-        // Проверка условий для рокировки по 7 столбцу
-        if (nowPlayer.equals("White")) {
-            if (board[0][4] instanceof King && board[0][7] instanceof Rook) {
-                King king = (King) board[0][4];
-                Rook rook = (Rook) board[0][7];
-                if (king.check && rook.check && board[0][5] == null && board[0][6] == null) {
-                    if (!king.isUnderAttack(this, 0, 4) && !king.isUnderAttack(this, 0, 5) && !king.isUnderAttack(this, 0, 6)) {
-                        // Выполняем рокировку
-                        board[0][6] = king;
-                        board[0][4] = null;
-                        board[0][5] = rook;
-                        board[0][7] = null;
-                        king.check = false;
-                        rook.check = false;
-                        nowPlayer = "Black";
-                        return true;
-                    }
-                }
-            }
-        } else {
-            // Проверка условий для черных фигур
-            if (board[7][4] instanceof King && board[7][7] instanceof Rook) {
-                King king = (King) board[7][4];
-                Rook rook = (Rook) board[7][7];
-                if (king.check && rook.check && board[7][5] == null && board[7][6] == null) {
-                    if (!king.isUnderAttack(this, 7, 4) && !king.isUnderAttack(this, 7, 5) && !king.isUnderAttack(this, 7, 6)) {
-                        // Выполняем рокировку
-                        board[7][6] = king;
-                        board[7][4] = null;
-                        board[7][5] = rook;
-                        board[7][7] = null;
-                        king.check = false;
-                        rook.check = false;
-                        nowPlayer = "White";
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
+        return castling(
+                nowPlayer.equals("White") ? 0 : 7, 4, 7,
+                new int[]{5, 6},
+                new int[]{4, 5, 6}
+        );
     }
-
-
 }
