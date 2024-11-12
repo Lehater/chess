@@ -1,3 +1,9 @@
+package main.java.edu.chess.board;
+
+import main.java.edu.chess.pieces.ChessPiece;
+import main.java.edu.chess.pieces.King;
+import main.java.edu.chess.pieces.Rook;
+
 public class ChessBoard {
     public ChessPiece[][] board = new ChessPiece[8][8]; // creating a field for game
     String nowPlayer;
@@ -22,7 +28,7 @@ public class ChessBoard {
 
                     // Update the check status after the move
                     if (board[endLine][endColumn] instanceof King || board[endLine][endColumn] instanceof Rook) {
-                        board[endLine][endColumn].check = false;
+                        board[endLine][endColumn].setWasMoved(true);
                     }
 
                     // Switch player turn
@@ -67,7 +73,7 @@ public class ChessBoard {
                 board[row][kingCol] instanceof King king &&
                 board[row][rookCol] instanceof Rook rook
         ) {
-            if (king.check && rook.check) {
+            if (!king.wasMoved() && !rook.wasMoved()) {
                 for (int col : emptyCols) { // Проверяем, что все промежуточные клетки пусты
                     if (board[row][col] != null) {
                         return false;
@@ -83,8 +89,8 @@ public class ChessBoard {
                 board[row][kingCol] = null;
                 board[row][rookCol < kingCol ? kingCol - 1 : kingCol + 1] = rook;
                 board[row][rookCol] = null;
-                king.check = false;
-                rook.check = false;
+                king.setWasMoved(true);
+                rook.setWasMoved(true);
                 nowPlayer = nowPlayer.equals("White") ? "Black" : "White";
                 return true;
             }

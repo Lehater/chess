@@ -1,6 +1,10 @@
+package main.java.edu.chess.pieces;
+
+import main.java.edu.chess.board.ChessBoard;
+
 public abstract class ChessPiece {
     private final String color;
-    protected boolean check = true;
+    private boolean wasMoved = false;
 
     public ChessPiece(String color) {
         this.color = color;
@@ -17,4 +21,11 @@ public abstract class ChessPiece {
         return color;
     }
 
+    public boolean wasMoved() {
+        return wasMoved;
+    }
+
+    public void setWasMoved(boolean wasMoved) {
+        this.wasMoved = wasMoved;
+    }
 }

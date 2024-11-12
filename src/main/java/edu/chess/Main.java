@@ -1,3 +1,8 @@
+package main.java.edu.chess;
+
+import main.java.edu.chess.board.ChessBoard;
+import main.java.edu.chess.pieces.*;
+
 import java.util.Scanner;
 
 public class Main {

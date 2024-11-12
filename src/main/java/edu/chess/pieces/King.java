@@ -1,3 +1,7 @@
+package main.java.edu.chess.pieces;
+
+import main.java.edu.chess.board.ChessBoard;
+
 public class King extends ChessPiece {
     public King(String color) {
         super(color);
