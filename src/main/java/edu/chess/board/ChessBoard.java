@@ -6,7 +6,7 @@ import main.java.edu.chess.pieces.Rook;
 
 public class ChessBoard {
     public ChessPiece[][] board = new ChessPiece[8][8]; // creating a field for game
-    String nowPlayer;
+    private String nowPlayer;
 
     public ChessBoard(String nowPlayer) {
         this.nowPlayer = nowPlayer;
